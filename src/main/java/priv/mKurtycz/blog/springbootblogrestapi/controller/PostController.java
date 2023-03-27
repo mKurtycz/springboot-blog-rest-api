@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import priv.mKurtycz.blog.springbootblogrestapi.payload.PostDTO;
+import priv.mKurtycz.blog.springbootblogrestapi.payload.PostResponse;
 import priv.mKurtycz.blog.springbootblogrestapi.service.PostService;
 
 import java.util.List;
@@ -22,8 +23,11 @@ public class PostController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<PostDTO>> getAllPosts() {
-        return new ResponseEntity<>(postService.getAllPosts(), HttpStatus.OK);
+    public ResponseEntity<PostResponse> getAllPosts(
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) Integer pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) Integer pageSize
+    ) {
+        return new ResponseEntity<>(postService.getAllPosts(pageNo, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

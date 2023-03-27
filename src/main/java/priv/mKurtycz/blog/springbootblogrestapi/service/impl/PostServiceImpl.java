@@ -1,10 +1,14 @@
 package priv.mKurtycz.blog.springbootblogrestapi.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import priv.mKurtycz.blog.springbootblogrestapi.entity.Post;
 import priv.mKurtycz.blog.springbootblogrestapi.exception.ResourceNotFoundException;
 import priv.mKurtycz.blog.springbootblogrestapi.payload.PostDTO;
+import priv.mKurtycz.blog.springbootblogrestapi.payload.PostResponse;
 import priv.mKurtycz.blog.springbootblogrestapi.repository.PostRepository;
 import priv.mKurtycz.blog.springbootblogrestapi.service.PostService;
 
@@ -29,17 +33,29 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDTO> getAllPosts() {
+    public PostResponse getAllPosts(Integer pageNo, Integer pageSize) {
 
-        List<Post> posts = postRepository.findAll();
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-        if (posts.isEmpty()) {
+        Page<Post> posts = postRepository.findAll(pageable);
+        List<Post> listOfPosts = posts.getContent();
+
+        if (listOfPosts.isEmpty()) {
             return null;
         }
         else {
-            return posts.stream()
-                    .map(post -> mapToDTO(post))
-                    .toList();
+            List<PostDTO> content =  listOfPosts.stream()
+                                        .map(post -> mapToDTO(post))
+                                        .toList();
+
+            PostResponse postResponse = new PostResponse(content,
+                    posts.getNumber(),
+                    posts.getSize(),
+                    posts.getTotalElements(),
+                    posts.getTotalPages(),
+                    posts.isLast());
+
+            return postResponse;
         }
     }
 
