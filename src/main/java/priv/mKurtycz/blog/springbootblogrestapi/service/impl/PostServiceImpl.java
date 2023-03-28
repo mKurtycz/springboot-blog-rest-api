@@ -74,10 +74,10 @@ public class PostServiceImpl implements PostService {
         if (postDTO.getTitle() != null) {
             post.setTitle(postDTO.getTitle());
         }
-        else if (postDTO.getDescription() != null) {
+        if (postDTO.getDescription() != null) {
             post.setDescription(postDTO.getDescription());
         }
-        else if (postDTO.getContent() != null) {
+        if (postDTO.getContent() != null) {
             post.setContent(postDTO.getContent());
         }
 
