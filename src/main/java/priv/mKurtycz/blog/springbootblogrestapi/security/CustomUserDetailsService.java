@@ -20,6 +20,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
 
+    // mike@mail.com pass1 USER
+    // admin@mail.com pass2 ADMIN
+    // test@mail.com pass3 USER
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
         User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
