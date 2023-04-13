@@ -20,26 +20,25 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-//
-//    @Autowired
-//    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-//        return configuration.getAuthenticationManager();
-//    }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf().disable()
                 .authorizeHttpRequests(authorize ->
-                        //authorize.anyRequest().authenticated())
                         authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
@@ -49,20 +48,20 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails mike = User.builder()
-                .username("mike")
-                .password(passwordEncoder().encode("mike"))
-                .roles("USER")
-                .build();
-
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder().encode("admin"))
-                .roles("ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(mike, admin);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        UserDetails mike = User.builder()
+//                .username("mike")
+//                .password(passwordEncoder().encode("mike"))
+//                .roles("USER")
+//                .build();
+//
+//        UserDetails admin = User.builder()
+//                .username("admin")
+//                .password(passwordEncoder().encode("admin"))
+//                .roles("ADMIN")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(mike, admin);
+//    }
 }
