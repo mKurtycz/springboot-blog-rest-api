@@ -16,6 +16,7 @@ import priv.mKurtycz.blog.springbootblogrestapi.payload.LoginDTO;
 import priv.mKurtycz.blog.springbootblogrestapi.payload.RegisterDTO;
 import priv.mKurtycz.blog.springbootblogrestapi.repository.RoleRepository;
 import priv.mKurtycz.blog.springbootblogrestapi.repository.UserRepository;
+import priv.mKurtycz.blog.springbootblogrestapi.security.JwtTokenProvider;
 import priv.mKurtycz.blog.springbootblogrestapi.service.AuthService;
 
 import java.util.HashSet;
@@ -39,13 +40,18 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private JwtTokenProvider tokenProvider;
+
     @Override
     public String login(LoginDTO loginDTO) {
         Authentication authentication =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsernameOrEmail(), loginDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return "User Logged-in successfully!";
+        String token = tokenProvider.generateToken(authentication);
+
+        return token;
     }
 
     @Override
